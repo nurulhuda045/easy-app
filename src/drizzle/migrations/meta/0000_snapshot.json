@@ -1,5 +1,5 @@
 {
-  "id": "296b9cc8-00b4-4bf3-9c2c-c419679dd53f",
+  "id": "c712ac00-ddc3-407c-ab2b-9d0cc9777444",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -36,7 +36,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -117,7 +117,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -177,7 +177,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -225,8 +225,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.product_customization": {
-      "name": "product_customization",
+    "public.product_customizations": {
+      "name": "product_customizations",
       "schema": "",
       "columns": {
         "id": {
@@ -294,7 +294,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -307,9 +307,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "product_customization_product_id_products_id_fk": {
-          "name": "product_customization_product_id_products_id_fk",
-          "tableFrom": "product_customization",
+        "product_customizations_product_id_products_id_fk": {
+          "name": "product_customizations_product_id_products_id_fk",
+          "tableFrom": "product_customizations",
           "tableTo": "products",
           "columnsFrom": [
             "product_id"
@@ -322,7 +322,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "product_customizations_product_id_unique": {
+          "name": "product_customizations_product_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "product_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -350,17 +358,23 @@
           "primaryKey": false,
           "notNull": true
         },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -507,7 +521,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {

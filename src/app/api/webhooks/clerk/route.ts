@@ -2,8 +2,8 @@ import { Webhook } from "svix"
 import { headers } from "next/headers"
 import { WebhookEvent } from "@clerk/nextjs/server"
 import { env } from "@/data/env/server"
-import { createUserSubscription } from "@/app/server/db/subscriptions"
-import { deleteUser } from "@/app/server/db/users"
+import { createUserSubscription } from "@/server/db/subscriptions"
+import { deleteUser } from "@/server/db/users"
 
 
 export async function POST(req: Request) {
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
     })
   }
 
+  console.log("*********Webhook event triggered**********", event.type);
   switch (event.type) {
     case "user.created": {
       await createUserSubscription({
