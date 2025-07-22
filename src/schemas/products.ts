@@ -20,5 +20,16 @@ export const productCountryDiscountsSchema = z.object({
         .optional(),
       coupon: z.string().optional(),
     })
+    .refine(
+      value => {
+        const hasCoupon = value.coupon != null && value.coupon.length > 0
+        const hasDiscount = value.discountPercentage != null
+        return !(hasCoupon && !hasDiscount)
+      },
+      {
+        message: "A discount is required if a coupon code is provided",
+        path: ["root"],
+      }
+    )
   ),
 })

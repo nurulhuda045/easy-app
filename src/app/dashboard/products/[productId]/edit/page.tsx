@@ -84,6 +84,8 @@ async function CountryTab({
     userId,
   });
 
+  console.log("*****Country Groups******:", countryGroups);
+
   return (
     <Card>
       <CardHeader>

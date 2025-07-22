@@ -16,9 +16,11 @@ import { z } from "zod";
 import ReactCountryFlag from "react-country-flag";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { updateCountryDiscounts } from "@/server/actions/products";
 
 export function CountryDiscountForm({
-//   productId,
+  productId,
   countryGroups,
 }: {
   productId: string;
@@ -36,6 +38,7 @@ export function CountryDiscountForm({
     };
   }[];
 }) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof productCountryDiscountsSchema>>({
     resolver: zodResolver(productCountryDiscountsSchema),
     defaultValues: {
@@ -53,10 +56,18 @@ export function CountryDiscountForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof productCountryDiscountsSchema>) {
-    console.log("Form submitted with values:", values);
-    // Here you would typically call an action to save the data
-    // e.g., createProductCountryDiscounts(productId, values);
+  async function onSubmit(
+    values: z.infer<typeof productCountryDiscountsSchema>
+  ) {
+    const data = await updateCountryDiscounts(productId, values);
+
+    if (data.message) {
+      toast({
+        title: data.error ? "Error" : "Success",
+        description: data.message,
+        variant: data.error ? "destructive" : "default",
+      });
+    }
   }
 
   return (
@@ -98,6 +109,7 @@ export function CountryDiscountForm({
                           <Input
                             className="w-24"
                             {...field}
+                            type="number"
                             value={field.value ?? ""}
                             onChange={(e) =>
                               field.onChange(e.target.valueAsNumber)
@@ -132,7 +144,9 @@ export function CountryDiscountForm({
           </Card>
         ))}
         <div className="self-end">
-          <Button disabled={form.formState.isSubmitting} type="submit">Save</Button>
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            Save
+          </Button>
         </div>
       </form>
     </Form>
