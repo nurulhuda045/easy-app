@@ -23,6 +23,7 @@ export default async function EditProductPage({
   const { userId, redirectToSignIn } = await auth();
   if (userId == null) return redirectToSignIn();
 
+
   const product = await getProduct({ id: productId, userId });
 
   if (product == null) return notFound();

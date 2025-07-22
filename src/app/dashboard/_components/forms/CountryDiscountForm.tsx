@@ -32,7 +32,7 @@ export function CountryDiscountForm({
       name: string;
       code: string;
     }[];
-    discounts?: {
+    discount?: {
       coupon: string;
       discountPercentage: number;
     };
@@ -44,12 +44,12 @@ export function CountryDiscountForm({
     defaultValues: {
       groups: countryGroups.map((group) => {
         const discount =
-          group.discounts?.discountPercentage ??
+          group.discount?.discountPercentage ??
           group.recommendedDiscountPercentage;
 
         return {
           countryGroupId: group.id,
-          coupon: group.discounts?.coupon ?? "",
+          coupon: group.discount?.coupon ?? "",
           discountPercentage: discount != null ? discount * 100 : undefined,
         };
       }),
