@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { formatCompactNumber } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { BrandLogo } from "@/components/ui/BrandLogo";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function HomePage() {
   return (

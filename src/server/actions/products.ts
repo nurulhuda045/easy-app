@@ -1,15 +1,17 @@
 "use server"
 
-import { productCountryDiscountsSchema, productDetailsSchema } from "@/schemas/products";
+import { productCountryDiscountsSchema, productCustomizationSchema, productDetailsSchema } from "@/schemas/products";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { 
   createProduct as createProductDb, 
   updateProduct as updateProductDb, 
   updateCountryDiscounts as updateCountryDiscountsDb,
-  deleteProduct as deleteProductDb 
+  deleteProduct as deleteProductDb,
+  updateProductCustomization as updateProductCustomizationDb
 } from "../db/products";
 import { redirect } from "next/navigation";
+import { canCustomizeBanner } from "../permissions";
 
 
 export async function createProduct(
@@ -98,3 +100,20 @@ export async function updateCountryDiscounts(
 
   return { error: false, message: "Country discounts saved" }
 }
+
+export async function updateProductCustomization(id: string, unsafeData: z.infer<typeof productCustomizationSchema>) {
+  const { userId } = await auth()
+  const { success, data: parsedData } = productCustomizationSchema.safeParse(unsafeData)
+  const canCustomize = await canCustomizeBanner(userId) 
+
+  if (!success || userId == null || !canCustomize) {
+    return { error: true, message: "There was an error saving your banner" }
+  }
+
+  // Assuming there's a function to update customization in the database
+  await updateProductCustomizationDb(parsedData, { productId: id, userId })
+
+  return { error: false, message: "Banner updated" }
+
+}
+
