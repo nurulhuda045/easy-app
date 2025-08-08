@@ -12,7 +12,7 @@ import {
   getUserTag,
   revalidateDBCache,
 } from "@/lib/cache";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { BatchItem } from "drizzle-orm/batch";
 
 export function getProductCountryGroups({
@@ -86,6 +86,14 @@ export async function getProduct({
   });
 
   return cacheFn({ id, userId });
+}
+
+export async function getProductCount(userId: string) {
+  const cacheFn = dbCache(getProductCountInternal, {
+    tags: [getUserTag(userId, CACHE_TAGS.products)],
+  });
+
+  return cacheFn(userId);
 }
 
 export async function createProduct(data: typeof ProductTable.$inferInsert) {
@@ -286,4 +294,13 @@ function getProductInternal({ id, userId }: { id: string; userId: string }) {
     where: ({ clerkUserId, id: idCol }, { and, eq }) =>
       and(eq(clerkUserId, userId), eq(idCol, id)),
   });
+}
+
+async function getProductCountInternal(userId: string) {
+  const counts = await db
+    .select({ productCount: count() })
+    .from(ProductTable)
+    .where(eq(ProductTable.clerkUserId, userId));
+
+  return counts[0]?.productCount ?? 0;
 }
